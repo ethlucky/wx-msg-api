@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv:*)",
+      "Bash(go get:*)",
+      "Bash(swag init:*)",
+      "Bash(go install:*)",
+      "Bash(~/go/bin/swag:*)",
+      "Bash(go build:*)",
+      "Bash(grep:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

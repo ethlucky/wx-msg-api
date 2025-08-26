@@ -1,0 +1,1073 @@
+basePath: /api/wx/v1
+definitions:
+  main.APIResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  main.BillInfoResponse:
+    properties:
+      amount:
+        type: string
+      create_time:
+        type: string
+      dollar:
+        type: string
+      group_id:
+        type: string
+      group_name:
+        type: string
+      id:
+        type: integer
+      msg_time:
+        type: integer
+      operator:
+        type: string
+      owner_id:
+        type: integer
+      rate:
+        type: string
+      remark:
+        type: string
+      status:
+        type: string
+      update_time:
+        type: string
+    type: object
+  main.BillQueryPaginatedResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/main.BillInfoResponse'
+        type: array
+      pagination:
+        $ref: '#/definitions/main.PaginationInfo'
+    type: object
+  main.BillStatsPaginatedResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/main.BillStatsResponse'
+        type: array
+      pagination:
+        $ref: '#/definitions/main.PaginationInfo'
+    type: object
+  main.BillStatsResponse:
+    properties:
+      count:
+        type: integer
+      group_id:
+        type: string
+      group_nick:
+        type: string
+      total_amount:
+        type: string
+    type: object
+  main.CreateRobotRequest:
+    properties:
+      address:
+        type: string
+      admin_key:
+        type: string
+      admin_users:
+        items:
+          type: string
+        type: array
+      description:
+        type: string
+      owner_id:
+        type: integer
+    required:
+    - address
+    - admin_key
+    - owner_id
+    type: object
+  main.LoginStatusResponse:
+    properties:
+      message:
+        type: string
+      nick_name:
+        type: string
+      status:
+        description: 0未扫码 1已扫码 2登录成功 3登录失败
+        type: integer
+      wx_id:
+        type: string
+    type: object
+  main.PaginationInfo:
+    properties:
+      has_next:
+        type: boolean
+      has_prev:
+        type: boolean
+      page_no:
+        type: integer
+      page_size:
+        type: integer
+      total_count:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  main.QRCodeResponse:
+    properties:
+      expire_time:
+        type: integer
+      qr_code:
+        type: string
+      token:
+        type: string
+    type: object
+  main.SaveUserRequest:
+    properties:
+      has_security_risk:
+        type: integer
+      is_message_bot:
+        type: integer
+      nick_name:
+        type: string
+      robot_id:
+        type: integer
+      token:
+        type: string
+      wx_id:
+        type: string
+    required:
+    - robot_id
+    - token
+    - wx_id
+    type: object
+  main.UpdateRobotRequest:
+    properties:
+      address:
+        type: string
+      admin_key:
+        type: string
+      admin_users:
+        items:
+          type: string
+        type: array
+      description:
+        type: string
+      owner_id:
+        type: integer
+    required:
+    - address
+    - admin_key
+    - owner_id
+    type: object
+  main.WxGroup:
+    properties:
+      create_time:
+        type: string
+      group_id:
+        type: string
+      group_nick_name:
+        type: string
+      id:
+        type: integer
+      msg_time:
+        type: integer
+      update_time:
+        type: string
+      wx_id:
+        type: string
+    type: object
+  main.WxRobotConfig:
+    properties:
+      address:
+        type: string
+      admin_key:
+        type: string
+      admin_users:
+        type: string
+      create_time:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      owner_id:
+        type: integer
+      update_time:
+        type: string
+      user_logins:
+        items:
+          $ref: '#/definitions/main.WxUserLogin'
+        type: array
+    type: object
+  main.WxUserLogin:
+    properties:
+      create_time:
+        type: string
+      expiration_time:
+        type: string
+      extension_time:
+        type: string
+      has_security_risk:
+        type: integer
+      id:
+        type: integer
+      is_initialized:
+        type: integer
+      is_message_bot:
+        type: integer
+      nick_name:
+        type: string
+      robot_id:
+        type: integer
+      status:
+        type: integer
+      token:
+        type: string
+      update_time:
+        type: string
+      wx_id:
+        type: string
+    type: object
+host: localhost:8886
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: WeChat robot management API service
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: WeChat Robot API
+  version: "1.0"
+paths:
+  /auth/extend/{robotId}:
+    post:
+      consumes:
+      - application/json
+      description: 延长机器人授权有效期
+      parameters:
+      - description: 机器人ID
+        in: path
+        name: robotId
+        required: true
+        type: string
+      - description: 延期天数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            days:
+              type: integer
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 延期成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人或用户不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 延期授权
+      tags:
+      - auth
+  /bills/list:
+    get:
+      consumes:
+      - application/json
+      description: 根据条件查询账单信息，支持分页
+      parameters:
+      - description: 创建时间开始，格式：yyyy-mm-dd hh:mi:ss
+        in: query
+        name: create_time_start
+        type: string
+      - description: 创建时间结束，格式：yyyy-mm-dd hh:mi:ss
+        in: query
+        name: create_time_end
+        type: string
+      - description: 群名称
+        in: query
+        name: group_name
+        type: string
+      - description: 群ID
+        in: query
+        name: group_id
+        type: string
+      - description: 账单状态
+        in: query
+        name: status
+        type: string
+      - description: 页码，默认1
+        in: query
+        name: page_num
+        type: integer
+      - description: 每页大小，默认10，最大100
+        in: query
+        name: page_size
+        type: integer
+      - description: 所属公司ID
+        in: query
+        name: owner_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.BillQueryPaginatedResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 查询账单列表
+      tags:
+      - bills
+  /bills/stats:
+    get:
+      consumes:
+      - application/json
+      description: 根据群组ID和群组昵称获取账单统计信息，按group_id和group_name分组统计金额总数，支持分页
+      parameters:
+      - description: 群组ID
+        in: query
+        name: group_id
+        type: string
+      - description: 群组昵称
+        in: query
+        name: group_nick
+        type: string
+      - default: 1
+        description: 页码，默认1
+        in: query
+        minimum: 1
+        name: page_no
+        type: integer
+      - default: 10
+        description: 每页大小，默认10
+        in: query
+        maximum: 100
+        minimum: 1
+        name: page_size
+        type: integer
+      - description: 所属公司ID
+        in: query
+        name: owner_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.BillStatsPaginatedResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取账单统计信息（分页）
+      tags:
+      - bills
+  /groups/search:
+    get:
+      consumes:
+      - application/json
+      description: 根据群名称进行模糊搜索
+      parameters:
+      - description: 群名称
+        in: query
+        name: groupNickName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 搜索成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/main.WxGroup'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 搜索群组
+      tags:
+      - groups
+  /groups/user/{wxId}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定微信用户的所有群组信息
+      parameters:
+      - description: 微信ID
+        in: path
+        name: wxId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/main.WxGroup'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取用户群组列表
+      tags:
+      - groups
+  /messages/group/send-image:
+    post:
+      consumes:
+      - application/json
+      description: 向指定群组发送图片消息
+      parameters:
+      - description: 图片消息参数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            image_content:
+              type: string
+            to_user_name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 发送成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 未找到消息机器人
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 发送图片消息
+      tags:
+      - messages
+  /messages/group/send-text:
+    post:
+      consumes:
+      - application/json
+      description: 向指定群组发送文本消息
+      parameters:
+      - description: 文本消息参数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            text_content:
+              type: string
+            to_user_name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 发送成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 未找到消息机器人
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 发送文本消息
+      tags:
+      - messages
+  /messages/group/send-text-image:
+    post:
+      consumes:
+      - application/json
+      description: 向指定群组同时发送文本和图片消息
+      parameters:
+      - description: 混合消息参数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            image_content:
+              type: string
+            text_content:
+              type: string
+            to_user_name:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 发送成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 未找到消息机器人
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 发送文本和图片消息
+      tags:
+      - messages
+  /messages/group/set-strategy:
+    post:
+      consumes:
+      - application/json
+      description: 设置系统的消息发送策略（随机或轮询）
+      parameters:
+      - description: 策略参数 (random/round_robin)
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            strategy:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 设置成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 设置消息发送策略
+      tags:
+      - messages
+  /robots/:
+    get:
+      consumes:
+      - application/json
+      description: 获取所有机器人配置及其关联的用户信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/main.WxRobotConfig'
+                  type: array
+              type: object
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取机器人列表
+      tags:
+      - robots
+    post:
+      consumes:
+      - application/json
+      description: 创建新的微信机器人配置
+      parameters:
+      - description: 机器人配置信息
+        in: body
+        name: robot
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateRobotRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 创建成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.WxRobotConfig'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 创建机器人配置
+      tags:
+      - robots
+  /robots/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 根据ID获取机器人详细信息
+      parameters:
+      - description: 机器人ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.WxRobotConfig'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取单个机器人信息
+      tags:
+      - robots
+    put:
+      consumes:
+      - application/json
+      description: 更新机器人配置信息
+      parameters:
+      - description: 机器人ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 机器人配置信息
+        in: body
+        name: robot
+        required: true
+        schema:
+          $ref: '#/definitions/main.UpdateRobotRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 修改成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.WxRobotConfig'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 修改机器人配置
+      tags:
+      - robots
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除用户及其关联的群组数据
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 删除用户
+      tags:
+      - users
+  /users/authorize:
+    post:
+      consumes:
+      - application/json
+      description: 为指定机器人生成授权token
+      parameters:
+      - description: 请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            robot_id:
+              type: integer
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  properties:
+                    robot_id:
+                      type: integer
+                    token:
+                      type: string
+                  type: object
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取授权信息
+      tags:
+      - users
+  /users/login-status/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户当前的在线状态
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 用户不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取用户在线状态
+      tags:
+      - users
+  /users/message-bot-status/{id}:
+    post:
+      consumes:
+      - application/json
+      description: 设置用户是否为消息机器人
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 消息机器人状态
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            is_message_bot:
+              type: integer
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新成功
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 更新消息机器人状态
+      tags:
+      - users
+  /users/qrcode:
+    post:
+      consumes:
+      - application/json
+      description: 生成微信登录二维码
+      parameters:
+      - description: 请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          properties:
+            robot_id:
+              type: integer
+            token:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.QRCodeResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取登录二维码
+      tags:
+      - users
+  /users/robot/{robotId}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定机器人的所有用户登录信息
+      parameters:
+      - description: 机器人ID
+        in: path
+        name: robotId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/main.WxUserLogin'
+                  type: array
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 获取机器人用户列表
+      tags:
+      - users
+  /users/save:
+    post:
+      consumes:
+      - application/json
+      description: 保存用户登录信息到数据库
+      parameters:
+      - description: 用户数据
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/main.SaveUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 保存成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.WxUserLogin'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 保存用户数据
+      tags:
+      - users
+  /users/status/{robotId}/{token}:
+    get:
+      consumes:
+      - application/json
+      description: 检查用户扫码登录状态
+      parameters:
+      - description: 机器人ID
+        in: path
+        name: robotId
+        required: true
+        type: string
+      - description: 授权token
+        in: path
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 检查成功
+          schema:
+            allOf:
+            - $ref: '#/definitions/main.APIResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/main.LoginStatusResponse'
+              type: object
+        "400":
+          description: 参数错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: 机器人不存在
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "500":
+          description: 内部服务器错误
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: 检查登录状态
+      tags:
+      - users
+schemes:
+- http
+- https
+swagger: "2.0"

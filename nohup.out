@@ -1,0 +1,17 @@
+nohup: APP_ENV=prod: No such file or directory
+nohup: APP_ENV=prod: No such file or directory
+===========================================
+应用启动信息:
+配置文件: config.prod.toml
+运行环境: production
+应用名称: wx-msg-chat
+应用版本: 1.0.0
+调试模式: false
+服务地址: 0.0.0.0:8886
+===========================================
+2025-08-12T17:11:54.543+0800	info	wx-msg-api/config.go:182	日志系统初始化完成	{"level": "debug", "format": "console", "output": "both", "file_path": "./logs/app.log", "max_age_days": 7, "max_size_mb": 100, "max_backups": 3, "compress": false}
+2025-08-12T17:11:54.544+0800	info	wx-msg-api/main.go:30	应用启动	{"name": "wx-msg-chat", "version": "1.0.0"}
+2025-08-12T17:11:54.544+0800	info	wx-msg-api/database.go:57	正在连接数据库	{"dsn": "root:Geek@135#@tcp(120.55.65.180:60100)/db_veeyii?charset=utf8mb4&parseTime=true&loc=Local"}
+2025-08-12T17:11:59.751+0800	info	wx-msg-api/database.go:97	数据库连接成功	{"host": "120.55.65.180", "port": 60100, "database": "db_veeyii", "charset": "utf8"}
+2025-08-12T17:11:59.751+0800	info	wx-msg-api/database.go:104	数据库连接成功
+2025-08-12T17:11:59.754+0800	info	wx-msg-api/main.go:74	HTTP服务器启动	{"address": "0.0.0.0:8886"}

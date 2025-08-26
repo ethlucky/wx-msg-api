@@ -1,0 +1,44 @@
+# 开发环境配置
+[app]
+name = "wx-msg-chat"
+version = "1.0.0"
+env = "development"
+debug = true
+
+# HTTP服务器配置
+[server]
+host = "0.0.0.0"
+port = 8886
+read_timeout = "30s"
+write_timeout = "30s"
+idle_timeout = "120s"
+
+# 日志配置
+[log]
+level = "debug"
+format = "console"
+output = "both"
+file_path = "./logs/app.log"
+max_size = 100
+max_age = 7
+max_backups = 3
+compress = false
+
+# 数据库配置 - 开发环境
+[database]
+host = "120.55.65.180"
+port = 60100
+username = "root"
+password = "Geek@135#"
+database = "db_veeyii"
+charset = "utf8mb4"
+parse_time = true
+max_idle_conns = 10
+max_open_conns = 50
+conn_max_lifetime = "30m"
+
+# Swagger文档配置
+[swagger]
+enable = true
+host = "localhost"
+port = 8886
